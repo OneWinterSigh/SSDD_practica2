@@ -104,6 +104,7 @@ begin
 		CASE clk IS
 			WHEN rising_edge(clk) =>
 				estado_actual <= estado_futuro;
+				piso_donde_esta <= estado_actual;
 			WHEN OTHERS =>
 				estado_actual <= estado_actual;
 		END CASE;
