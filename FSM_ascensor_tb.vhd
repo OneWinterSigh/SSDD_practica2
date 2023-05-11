@@ -48,8 +48,8 @@ END COMPONENT;
      	SIGNAL sube             	:  STD_LOGIC;     	                 	-- ascensor sube
      	SIGNAL baja             	:  STD_LOGIC;             	         	-- ascensor baja
 		SIGNAL piso_donde_esta  	:  STD_LOGIC_VECTOR(1 DOWNTO 0);  		-- piso
-		SIGNAL estado_actual 		: std_logic_vector(1 DOWNTO 0);
-		SIGNAL estado_futuro 		: std_logic_vector(1 DOWNTO 0);
+		SIGNAL e_actual 		: std_logic_vector(1 DOWNTO 0);
+		SIGNAL e_futuro 		: std_logic_vector(1 DOWNTO 0);
                            
 
 
