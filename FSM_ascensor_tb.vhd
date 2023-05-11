@@ -34,7 +34,6 @@ COMPONENT FSM_ascensor IS
 		codigo_piso	 		: IN	STD_LOGIC_VECTOR(1 DOWNTO 0);
 		sube, baja			: OUT	STD_LOGIC;
 		piso_donde_esta		: OUT STD_LOGIC_VECTOR(1 DOWNTO 0)
-
 	);
 
  
@@ -44,11 +43,13 @@ END COMPONENT;
 -- Declaraci�n de se�ales
 
      	CONSTANT periodo        	:  TIME := 20 ns;
-	SIGNAL reloj            	:  STD_LOGIC := '0';				-- Arranque de secuencia del reloj
-     	SIGNAL boton	   		:  STD_LOGIC_VECTOR (1 DOWNTO 0);  		-- boton que se activa
+		SIGNAL reloj            	:  STD_LOGIC := '0';				-- Arranque de secuencia del reloj
+     	SIGNAL boton	   			:  STD_LOGIC_VECTOR (1 DOWNTO 0);  		-- boton que se activa
      	SIGNAL sube             	:  STD_LOGIC;     	                 	-- ascensor sube
      	SIGNAL baja             	:  STD_LOGIC;             	         	-- ascensor baja
-	SIGNAL piso_donde_esta  	:  STD_LOGIC_VECTOR(1 DOWNTO 0);  		-- piso
+		SIGNAL piso_donde_esta  	:  STD_LOGIC_VECTOR(1 DOWNTO 0);  		-- piso
+		SIGNAL estado_actual 		: std_logic_vector(1 DOWNTO 0);
+		SIGNAL estado_futuro 		: std_logic_vector(1 DOWNTO 0);
                            
 
 
