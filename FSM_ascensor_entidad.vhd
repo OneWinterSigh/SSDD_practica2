@@ -1,4 +1,4 @@
--- Proyecto:             Ascensor de 3 pisos
+ -- Proyecto:             Ascensor de 3 pisos
 -- Dise?o:               M?quina de estados finitos (FSM)
 -- Nombre del fichero:   FSM_ascensor.vhd                                 
 -- Autor: Germán Ruiz Cabello 	 
@@ -43,21 +43,6 @@ SIGNAL estado_actual: estado := piso0;
 SIGNAL estado_futuro: estado;
 -- Comienzo de la arquitectura
 begin
-	salida:
-	PROCESS(estado_actual)
-  	begin
-		case estado_actual is
-			when piso0 =>
-				piso_donde_esta <= "00";
-			when piso1 =>
-				piso_donde_esta <= "01";
-			when piso2 =>
-				piso_donde_esta <= "10";
-			when others =>
-				piso_donde_esta <= "00";
-		end case;
-	end process salida;
-
 	--Proceso para generar el estado futuro y salida
 	-- Modificar el process con la señal de reloj
 	combinacional:
@@ -65,6 +50,7 @@ begin
 	begin
 		CASE estado_actual is
 			WHEN piso0 =>
+				piso_donde_esta <= "00";
 			IF codigo_piso = "01" THEN
 				estado_futuro <= piso1;
 				sube <= '1';
@@ -79,6 +65,7 @@ begin
 				baja <= '0';
 			END IF;
 			WHEN piso1 =>
+			piso_donde_esta <= "01";
 			IF codigo_piso = "00" THEN
 				estado_futuro <= piso0;
 				sube <= '0';
@@ -93,6 +80,7 @@ begin
 				baja <= '0';
 			END IF;
 			WHEN piso2 =>
+			piso_donde_esta <= "10";
 			IF codigo_piso = "00" THEN
 				estado_futuro <= piso0;
 				sube <= '0';
@@ -107,6 +95,7 @@ begin
 				baja <= '0';
 			END IF;
 			WHEN OTHERS =>
+			piso_donde_esta <= "00";
 				estado_futuro <= piso0;
 				sube <= '0';
 				baja <= '0';
@@ -116,11 +105,10 @@ begin
 	memoria:
 	PROCESS(clk)
 	BEGIN
-		CASE clk IS
-			WHEN rising_edge(clk) =>
-				estado_actual <= estado_futuro;
-			WHEN OTHERS =>
-				estado_actual <= estado_actual;
-		END CASE;
+		IF (rising_edge(clk))THEN
+			estado_actual <= estado_futuro;
+		ELSE
+			estado_actual <= estado_actual;
+		END IF;
 	END PROCESS memoria;
 END FSM_arquitectura;
