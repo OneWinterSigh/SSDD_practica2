@@ -43,6 +43,21 @@ SIGNAL estado_actual: estado := piso0;
 SIGNAL estado_futuro: estado;
 -- Comienzo de la arquitectura
 begin
+	salida:
+	PROCESS(estado_actual)
+  	begin
+		case estado_actual is
+			when piso0 =>
+				piso_donde_esta <= "00";
+			when piso1 =>
+				piso_donde_esta <= "01";
+			when piso2 =>
+				piso_donde_esta <= "10";
+			when others =>
+				piso_donde_esta <= "00";
+		end case;
+	end process salida;
+
 	--Proceso para generar el estado futuro y salida
 	-- Modificar el process con la señal de reloj
 	combinacional:
@@ -104,7 +119,6 @@ begin
 		CASE clk IS
 			WHEN rising_edge(clk) =>
 				estado_actual <= estado_futuro;
-				piso_donde_esta <= estado_actual;
 			WHEN OTHERS =>
 				estado_actual <= estado_actual;
 		END CASE;
