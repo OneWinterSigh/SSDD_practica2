@@ -31,78 +31,81 @@ ENTITY FSM_ascensor IS
 		-- Salidas de la FSM 
 		sube, baja: OUT	STD_LOGIC;				-- direcci?n movimiento del motor
 		-- Estados (piso_donde_esta0, piso_donde_esta1, piso_donde_esta2)
-		piso_donde_esta: OUT STD_LOGIC_VECTOR(1 DOWNTO 0);  -- c?digo binario del piso donde se encuentra
+		piso_donde_esta: OUT STD_LOGIC_VECTOR(1 DOWNTO 0)  -- c?digo binario del piso donde se encuentra
 		-- Además es el e_actual
-		e_futuro: in STD_LOGIC_VECTOR(1 DOWNTO 0)
 	);
 END FSM_ascensor ;
 
 -- Modelo de arquitectura
 architecture FSM_arquitectura of FSM_ascensor is 
+TYPE estado IS (piso0, piso1, piso2);
+SIGNAL estado_actual: estado := piso0;
+SIGNAL estado_futuro: estado;
 -- Comienzo de la arquitectura
 begin
 	--Proceso para generar el estado futuro y salida
 	-- Modificar el process con la señal de reloj
 	combinacional:
-	PROCESS (codigo_piso, e_futuro)
+	PROCESS (codigo_piso, estado_actual)
 	begin
-		CASE e_futuro is
-			WHEN "00"=>
+		CASE estado_actual is
+			WHEN piso0 =>
 			IF codigo_piso = "01" THEN
-				piso_donde_esta <= "01";
+				estado_futuro <= piso1;
 				sube <= '1';
 				baja <= '0';
 			ELSIF codigo_piso = "10" THEN
-				piso_donde_esta <= "10";
+				estado_futuro <= piso2;
 				sube <= '1';
 				baja <= '0';
-			ELSE 
-				piso_donde_esta <= "00";
+			ELSE
+				estado_futuro <= piso0;
 				sube <= '0';
 				baja <= '0';
 			END IF;
-			WHEN "01" =>
+			WHEN piso1 =>
 			IF codigo_piso = "00" THEN
-				piso_donde_esta <= "01";
+				estado_futuro <= piso0;
 				sube <= '0';
 				baja <= '1';
 			ELSIF codigo_piso = "10" THEN
-				piso_donde_esta <= "10";
+				estado_futuro <= piso2;
 				sube <= '1';
 				baja <= '0';
-			ELSE 
-				piso_donde_esta <= "01";
+			ELSE
+				estado_futuro <= piso1;
 				sube <= '0';
 				baja <= '0';
 			END IF;
-			WHEN "10" =>
+			WHEN piso2 =>
 			IF codigo_piso = "00" THEN
-				piso_donde_esta <= "10";
+				estado_futuro <= piso0;
 				sube <= '0';
 				baja <= '1';
 			ELSIF codigo_piso = "01" THEN
-				piso_donde_esta <= "01";
+				estado_futuro <= piso1;
 				sube <= '0';
 				baja <= '1';
-			ELSE 
-				piso_donde_esta <= "10";
+			ELSE
+				estado_futuro <= piso2;
 				sube <= '0';
 				baja <= '0';
 			END IF;
 			WHEN OTHERS =>
-				piso_donde_esta <= "00";
+				estado_futuro <= piso0;
 				sube <= '0';
 				baja <= '0';
+			
 		END CASE;
 	END PROCESS combinacional;
 	memoria:
-	PROCESS(clk, e_futuro)
+	PROCESS(clk)
 	BEGIN
 		CASE clk IS
-			WHEN "1" =>
-				e_futuro <= piso_donde_esta;
+			WHEN rising_edge(clk) =>
+				estado_actual <= estado_futuro;
 			WHEN OTHERS =>
-				e_futuro <= e_futuro;
+				estado_actual <= estado_actual;
 		END CASE;
 	END PROCESS memoria;
 END FSM_arquitectura;
