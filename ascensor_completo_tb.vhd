@@ -1,82 +1,48 @@
 LIBRARY ieee;
-USE ieee.std_logic_1164.all;
+USE ieee.STD_LOGIC_1164.all;
 
--- Testbench entidad
-entity testbench_ascensor_completo is
-end testbench_ascensor_completo;
+ENTITY ascensor_completo_test IS
+END ascensor_completo_test;
 
-ARCHITECTURE behavior OF testbench_ascensor_completo IS
+ARCHITECTURE behaviour OF ascensor_completo_test IS
 
-    -- Componente a probar
-    COMPONENT ascensor_completo
-        port(
-            clk: in std_logic;
-            codigo_piso: in std_logic_vector(2 downto 0);
-            sube: out std_logic;
-            baja: out std_logic;
-            piso_donde_esta: out std_logic_vector(1 downto 0)
-        );
-    END COMPONENT;
+COMPONENT ascensor_completo IS
+	PORT
+	(
+		clk				: IN 	STD_LOGIC;
+		piso_donde_va			: IN	STD_LOGIC_VECTOR(2 DOWNTO 0);
+		sube, baja 			: OUT	STD_LOGIC;
+		piso_donde_esta 		: OUT	STD_LOGIC_VECTOR(1 DOWNTO 0)
+	);
 
-    -- Señales para el testbench
-    SIGNAL clk : std_logic := '0';
-    SIGNAL codigo_piso : std_logic_vector(2 downto 0) := "000";
-    SIGNAL sube : std_logic;
-    SIGNAL baja : std_logic;
-    SIGNAL piso_donde_esta : std_logic_vector(1 downto 0);
+END COMPONENT;
+-- Declaración de señales
 
-BEGIN
+	CONSTANT periodo 			:TIME := 20 ns;
+	SIGNAL reloj				:STD_LOGIC := '0';			-- Arranque de secuencias
+	SIGNAL piso_donde_va 			: STD_LOGIC_VECTOR (2 DOWNTO 0); 	-- boton que se activa
+	SIGNAL sube 				: STD_LOGIC;				-- ascensor sube
+	SIGNAL baja				: STD_LOGIC; 				-- ascensor baja
+	SIGNAL piso_donde_esta 			: STD_LOGIC_VECTOR (1 DOWNTO 0); 	-- piso
 
-    -- Instancia del componente a probar
-    DUT: ascensor_completo
-        PORT MAP (
-            clk => clk,
-            codigo_piso => codigo_piso,
-            sube => sube,
-            baja => baja,
-            piso_donde_esta => piso_donde_esta
-        );
 
-    -- Proceso de generación de señales de prueba
-    stim_proc: process
-    begin
-        -- Inicialización de señales
-        codigo_piso <= "000";
-        clk <= '0';
+BEGIN 
+ascen: ascensor_completo PORT MAP (clk		=> reloj,	
+				piso_donde_va	=> piso_donde_va,
+				sube 		=> sube,
+				baja		=> baja,
+				piso_donde_esta	=> piso_donde_esta);
+reloj	<= NOT reloj AFTER periodo/2;
 
-        -- Esperar un ciclo antes de cambiar los valores
-        wait for 10 ns;
-
-        -- Establecer nuevos valores
-        codigo_piso <= "001";
-
-        -- Esperar un ciclo antes de cambiar los valores
-        wait for 10 ns;
-
-        -- Establecer nuevos valores
-        codigo_piso <= "010";
-
-        -- Esperar un ciclo antes de cambiar los valores
-        wait for 10 ns;
-
-        -- Establecer nuevos valores
-        codigo_piso <= "011";
-
-        -- Esperar un ciclo antes de cambiar los valores
-        wait for 10 ns;
-
-        -- Finalizar la simulación
-        wait;
-    end process;
-
-    -- Proceso de generación de clock
-    clk_proc: process
-    begin
-        while now < 100 ns loop
-            clk <= not clk;
-            wait for 5 ns;
-        end loop;
-        wait;
-    end process;
-
-END behavior;
+piso_donde_va <= "100",
+			"001" AFTER periodo,
+			"010" AFTER 2 * periodo,
+			"100" AFTER 3 * periodo,
+			"000" AFTER 4 * periodo,
+			"111" AFTER 5 * periodo,
+			"001" AFTER 6 * periodo,
+			"100" AFTER 7 * periodo,
+			"010" AFTER 8 * periodo,
+			"010" AFTER 9 * periodo,
+			"001" AFTER 10 * periodo;
+END behaviour;
