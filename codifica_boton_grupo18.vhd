@@ -3,7 +3,7 @@
 --Proyecto: Primera practica de Sistemas Digitales
 --Diseño: Codificador
 --Nombre del fichero: codifica_boton_grupo18.vhd
---Autor: Germán Ruiz Cabello
+--Autor: Germán Ruiz Cabello y Jesús David De Amorim Arciniegas
 --Fecha: 21/02/2023--
 --Versión:1.0.0
 --Resumen: PONER POR EJEMPLO:
